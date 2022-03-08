@@ -1,13 +1,25 @@
 <script>
+  //import { shortcut } from '../js/shortcut'
+  import { scale } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
+  import { flip } from 'svelte/animate'
   export let label;
   export let value;
   export let multiline = false;
+  export let shortcut;
+  let focused = false;
+  
 </script>
 
 <label for="" >
   <span>{label}</span>
   {#if multiline}
-    <textarea bind:value />
+    <textarea autofocus bind:value 
+    transition:scale={{duration: 1000, easing: cubicOut}}
+    on:click={() => focused = !focused}
+    on:mouseleave={() => focused = false}
+    class:focused
+    />
   {:else}
     <input type="text" bind:value />
   {/if}
@@ -34,5 +46,9 @@
   }
   textarea {
     height: 8rem;
+  }
+
+  .focused {
+    height: 30em;
   }
 </style>
