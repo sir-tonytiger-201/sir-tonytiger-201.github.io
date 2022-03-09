@@ -16,7 +16,7 @@
   {#if multiline}
     <textarea autofocus bind:value 
     transition:scale={{duration: 1000, easing: cubicOut}}
-    on:click={() => focused = !focused}
+    on:click={() => focused = !focused} spellcheck={false}
     on:mouseleave={() => focused = false}
     class:focused
     />
@@ -42,6 +42,7 @@
     width: 100%;
     margin: 0px;
     box-shadow: 10px 10px 20px  rgb(224, 93, 174);
+    
     
   }
   textarea {

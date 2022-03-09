@@ -30,15 +30,26 @@
   }}>select all</button>
    
   </div>
+  <table>
+    <thead>
+      <tr>
+        {#each numberArray as triangularNumber, i}
+          <td>{i+1}</td>
+        {/each}
+      
+
+</tr>
   {#each numberArray as triangularNumber, i}
-    <span>
-      <a href="" bind:innerHTML={triangularNumber} contenteditable 
-      class:triangularhighlight={triangularHighlight[triangularNumber]}
-      on:click|preventDefault={() => toggleHighlight(triangularNumber)}>
-        {triangularNumber} &nbsp;
-      </a>
-      </span>
-  {/each}
+  <td>
+    <a href="" bind:innerHTML={triangularNumber} contenteditable 
+    class:triangularhighlight={triangularHighlight[triangularNumber]}
+    on:click|preventDefault={() => toggleHighlight(triangularNumber)}>
+      {triangularNumber} &nbsp;
+    </a>
+    </td>
+{/each}
+</thead>
+</table>
 </div>
 
 <style>
@@ -49,7 +60,8 @@
     margin: 0px;
     width: 100%;
     background-color: lightblue;
-    
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em;
     }
 
     .triangularhighlight {
@@ -58,4 +70,12 @@
 		font-style: italic;
 		font-weight: bold;
 	}
+
+  table, td {
+    border-style: solid;
+    text-align: center;
+    border-collapse: collapse;
+    padding: 0.5vh;
+  }
+
 </style>

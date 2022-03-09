@@ -3,44 +3,45 @@
 	import cipherList from "../calc/ciphers";
 	import { shortcut } from "../js/shortcut";
 	import TriangularNumbers from "./TriangularNumbers.svelte";
-	import { scale } from 'svelte/transition';
-  import { cubicOut } from 'svelte/easing';
+	import { scale } from "svelte/transition";
+	import { cubicOut } from "svelte/easing";
 	let text = "";
 	let selectedCipher = 0;
 	let selected = 0;
 	let triangularHighlight = {};
+	let quickWord = '';
 	const params = {
 		ignoreTrivial: false,
 		onlyShowHighlighted: false,
 		showValues: true,
-	}
-	
+	};
+
 	let showValues = false;
-	let numberLookup = '';
-	let numberSearch = '';
-	$: specialNumbers = [ 33, 38, 42, 47, 48, 74, 83, 84, 137, 201];
+	let numberLookup = "";
+	let numberSearch = "";
+	$: specialNumbers = [33, 38, 42, 47, 48, 74, 83, 84, 120, 137, 201];
 	const numberInfo = {
-		33: 'https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/33',
-		42: 'https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/42',
-		47: 'https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/47',
-		74: 'https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/74',
-		83: 'https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/83',
-		137: 'https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/137',
-		201: 'https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/201',
-		
-	}
+		33: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/33",
+		42: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/42",
+		47: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/47",
+		74: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/74",
+		83: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/83",
+		120: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/120",
+		137: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/137",
+		201: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/201",
+	};
 
 	const trivialList = ["a", "is", "or", "of", "if", "at", "the", "also"];
 
-	const addToHighlights = num => {
-		if(!specialNumbers.includes(num)) {
-		specialNumbers = [...specialNumbers, Number(num) ]
-		triangularHighlight = triangularHighlight;
-		console.log(specialNumbers)
+	const addToHighlights = (num) => {
+		if (!specialNumbers.includes(num)) {
+			specialNumbers = [...specialNumbers, Number(num)];
+			triangularHighlight = triangularHighlight;
+			console.log(specialNumbers);
 		}
-		
-	}
+	};
 
+	
 	$: currentCipher = cipherList[selectedCipher];
 	$: cipherString = () => {
 		if (!currentCipher) return "";
@@ -50,15 +51,13 @@
 			const val = currentCipher.vArr[currentCipher.cArr.indexOf(c)];
 			letterValues[letter] = val;
 		}
-		return JSON.stringify(letterValues);;
+		return JSON.stringify(letterValues);
 	};
 
 	const toggleAndUpdate = (key) => {
 		params[key] = !params[key];
 		triangularHighlight = triangularHighlight;
-	}
-
-	
+	};
 
 	const displayCipher = () => {
 		let letterValues = {};
@@ -102,50 +101,59 @@
 
 	const evalWord = (word) => {
 		let val = 0;
-		for (const c of word) {
+		for (const c of word.toLocaleLowerCase()) {
 			val += valueOf(c);
 		}
 		return val;
 	};
 
-	const simplify = word => {
-		if(typeof(word) !== "string") return word;
+	const simplify = (word) => {
+		if (typeof word !== "string") return word;
 		let simplified = "";
 		//console.log("word = ", word)
 		for (const c of word) {
-			if(currentCipher.vArr[currentCipher.cArr.indexOf(c.charCodeAt(0))]) {
+			if (currentCipher.vArr[currentCipher.cArr.indexOf(c.charCodeAt(0))]) {
 				simplified += c;
 			}
 		}
-		if ( word !== simplified) {
+		if (word !== simplified) {
 			//console.log(word," simplified is ", simplified)
 		}
-		
-		return simplified
 
+		return simplified;
+	};
+
+	$: if( selectedCipher) {
+		quickDecode = evalWord(quickWord)
 	}
 
+
 	const highlight = (text) => {
-		const  [ word, value ]  = typeof(text) === "string" ? text.split(" ") : [ text , null]
-		if(!params.showValues) text = word;
-		if (params.ignoreTrivial && (trivialList.includes(simplify(word))  || simplify(word).length < 4)) {
-			return params.onlyShowHighlighted ? '' : text;
+		const [word, value] =
+			typeof text === "string" ? text.split(" ") : [text, null];
+		if (!params.showValues) text = word;
+		if (
+			params.ignoreTrivial &&
+			(trivialList.includes(simplify(word)) || simplify(word).length < 4)
+		) {
+			return params.onlyShowHighlighted ? "" : text;
 		} else {
 			if (numberInfo[value]) {
-				return `<a href='${numberInfo[value]}' class='highlight' target="_blank">${text}</a>`
+				return `<a href='${numberInfo[value]}' class='highlight' target="_blank">${text}</a>`;
 			} else {
 				return "<span class='highlight'>" + text + "</span>";
 			}
-			
-			
 		}
 	};
 
 	const triangleHighlight = (text) => {
-		const word = text.split(" ")[0]
-		if(!params.showValues) text = word;
-		if (params.ignoreTrivial && (trivialList.includes(word) || simplify(word).length < 4))  {
-			return params.onlyShowHighlighted ? '' : text;
+		const word = text.split(" ")[0];
+		if (!params.showValues) text = word;
+		if (
+			params.ignoreTrivial &&
+			(trivialList.includes(word) || simplify(word).length < 4)
+		) {
+			return params.onlyShowHighlighted ? "" : text;
 		} else {
 			return "<span class='triangle-highlight'>" + text + "</span>";
 		}
@@ -165,33 +173,29 @@
 
 				if (specialNumbers.includes(val)) {
 					//val = highlight(val);
-					const returnedValue = highlight(word + " " + val) 
+					const returnedValue = highlight(word + " " + val);
 					if (returnedValue) {
-						decoded +=  returnedValue + " ";
-					} else {
-						combinedValue.num -= val;						
-					}
-					
-				} else if (triangularHighlight[val] === true) {
-					const returnedValue = triangleHighlight(word + " " + val) 
-					if(returnedValue) {
 						decoded += returnedValue + " ";
 					} else {
 						combinedValue.num -= val;
 					}
-					
-				} else {
-					if (!params.onlyShowHighlighted) {
-						if(params.showValues) {
-							decoded += word + " " + val + " "
-						} else {
-							decoded += word + " "
-						}
-						
+				} else if (triangularHighlight[val] === true) {
+					const returnedValue = triangleHighlight(word + " " + val);
+					if (returnedValue) {
+						decoded += returnedValue + " ";
 					} else {
 						combinedValue.num -= val;
 					}
-					
+				} else {
+					if (!params.onlyShowHighlighted) {
+						if (params.showValues) {
+							decoded += word + " " + val + " ";
+						} else {
+							decoded += word + " ";
+						}
+					} else {
+						combinedValue.num -= val;
+					}
 				}
 			}
 
@@ -200,14 +204,20 @@
 			} else {
 				combinedValue.html = combinedValue.num;
 			}
-			
+
+			if (decoded.length > 0) {
 				decoded +=
-				combinedValue.num > 0 && params.showValues ? "(" + combinedValue.html + ")<br>" : "<br>";
-			
+					combinedValue.num > 0 && params.showValues
+						? "(" + combinedValue.html + ")<br><br>"
+						: "<br>";
+			}
 		}
 
 		return decoded;
 	};
+
+	$: quickDecode = evalWord(quickWord)
+
 </script>
 
 <!-- {"cipherName":"English Ordinal",
@@ -224,24 +234,37 @@
 			<TriangularNumbers bind:triangularHighlight />
 			<nav>
 				<!-- <h1>Decoder</h1> -->
+				<input
+					type="text"
+					bind:value={quickWord}
+					
+					placeholder="quick decode"
+				/>
+				<input type="text" readonly class="numberbox" bind:value={quickDecode} />
 				<button on:click={() => (text = "")}>Clear text</button>
-				<input type="text" 
-				use:shortcut={{ code: "Enter", callback: () => addToHighlights(numberSearch) }}
-				bind:value={numberSearch} 
-				placeholder="number search" />
+				<input
+					type="text"
+					use:shortcut={{
+						code: "Enter",
+						callback: () => addToHighlights(numberSearch),
+					}}
+					bind:value={numberSearch}
+					placeholder="number search"
+				/>
 				<button on:click={() => addToHighlights(numberSearch)}>go</button>
-				<button on:click={() => toggleAndUpdate('onlyShowHighlighted')}>
+				<button on:click={() => toggleAndUpdate("onlyShowHighlighted")}>
 					show
 					{#if params.onlyShowHighlighted} all {:else} only highlighted {/if}
 				</button>
-				<button on:click={() => toggleAndUpdate('showValues')}>
+				<button on:click={() => toggleAndUpdate("showValues")}>
 					{#if params.showValues} hide {:else} show {/if} values
 				</button>
-				<button on:click={() => toggleAndUpdate('ignoreTrivial')}>
+				<button on:click={() => toggleAndUpdate("ignoreTrivial")}>
 					{#if params.ignoreTrivial} show {:else} hide {/if} trivial
 				</button>
-				<select bind:value={selectedCipher} 
-				use:shortcut={{ code: "Home", callback: () =>selectedCipher = 0 }}
+				<select
+					bind:value={selectedCipher}
+					use:shortcut={{ code: "Home", callback: () => (selectedCipher = 0) }}
 				>
 					{#each cipherList as cipher, i}
 						<option value={i}>
@@ -261,28 +284,38 @@
 					use:shortcut={{ code: "Tab", callback: cycleForward }}
 					>Next Cipher</button
 				>
-				<input type="text" 
-				bind:value={numberLookup} placeholder="number lookup"
-				
+				<input
+					type="text"
+					bind:value={numberLookup}
+					class="numberbox"
+					placeholder="number lookup"
 				/>
-				<button on:click={() => window.open(`https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/${numberLookup}`)}>go</button>
+				<button
+					on:click={() =>
+						window.open(
+							`https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/${numberLookup}`
+						)}>go</button
+				>
 				<button>Sorted Results</button>
 			</nav>
 
-			<TextInput {shortcut} label="Text to decode" bind:value={text} multiline={true} />
+			<TextInput
+				{shortcut}
+				label="Text to decode"
+				bind:value={text}
+				multiline={true}
+			/>
 			{cipherString()}
 		</center>
 	</div>
-	<div class="decoded" transition:scale={{duration: 1000, easing: cubicOut}}>
+	<div class="decoded" transition:scale={{ duration: 1000, easing: cubicOut }}>
 		<!-- 	<p>{text}</p>
 	<p>
 		{JSON.stringify(currentCipher)}
 	</p> -->
 		{#key selectedCipher}
 			{#key triangularHighlight}
-				<p>
-					{@html decode(text.toLocaleLowerCase())}
-				</p>
+					{@html decode(text).replace(/<br><br>/g,'<br>')}
 			{/key}
 		{/key}
 		<!-- 	{#each cipherList as c}
@@ -294,9 +327,9 @@
 <style>
 	main {
 		text-align: center;
-		padding: 1em;
 		max-width: 240px;
-		margin: 0 auto;
+		margin: 0px;
+		
 	}
 
 	h1 {
@@ -313,13 +346,11 @@
 		}
 	}
 
-	
-	:global(.highlight, .highlight.a:link, a:visited ){
+	:global(.highlight, .highlight.a:link, a:visited) {
 		color: yellow;
 		background-color: blue;
 		font-style: italic;
 		font-weight: bold;
-		
 	}
 
 	:global(.triangle-highlight) {
@@ -333,20 +364,26 @@
 		margin-top: 0px;
 		margin-left: auto;
 		margin-right: 1.5em;
-/* 		position: fixed; */
+		/* 		position: fixed; */
 		background-position-y: center;
 		width: auto;
 		background-color: yellow;
 		text-align: center;
 		align-content: center;
+		border-radius: 1em;
+		
 	}
 
 	.decoded {
-	/* 	margin-top: 18em; */
+		/* 	margin-top: 18em; */
 		margin-top: 1em;
 		border-width: 1px;
 		border-style: solid;
 		border-radius: 1em;
+	}
+
+	.numberbox {
+		width: 3em;
 	}
 
 	input {
