@@ -19,6 +19,7 @@
 	let showValues = false;
 	let numberLookup = "";
 	let numberSearch = "";
+	let customNumberFilter = []
 	$: specialNumbers = [33, 38, 42, 47, 48, 74, 83, 84, 120, 137, 201];
 	const numberInfo = {
 		33: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/33",
@@ -31,13 +32,13 @@
 		201: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/201",
 	};
 
-	const trivialList = ["a", "is", "or", "of", "if", "at", "the", "also"];
+	const trivialList = ["a", "is", "or", "of", "if", "at", "the", "also", "for"];
 
 	const addToHighlights = (num) => {
-		if (!specialNumbers.includes(num)) {
-			specialNumbers = [...specialNumbers, Number(num)];
+		if (!customNumberFilter.includes(Number(num))) {
+			customNumberFilter = [...customNumberFilter, Number(num)];
 			triangularHighlight = triangularHighlight;
-			console.log(specialNumbers);
+			console.log(customNumberFilter);
 		}
 	};
 
@@ -128,7 +129,7 @@
 	}
 
 
-	const highlight = (text) => {
+	const highlight = (text, customClass = 'highlight') => {
 		const [word, value] =
 			typeof text === "string" ? text.split(" ") : [text, null];
 		if (!params.showValues) text = word;
@@ -139,9 +140,9 @@
 			return params.onlyShowHighlighted ? "" : text;
 		} else {
 			if (numberInfo[value]) {
-				return `<a href='${numberInfo[value]}' class='highlight' target="_blank">${text}</a>`;
+				return `<a href='${numberInfo[value]}' class='${customClass}' target="_blank">${text}</a>`;
 			} else {
-				return "<span class='highlight'>" + text + "</span>";
+				return `<span class='${customClass}'> ${text} </span>`;
 			}
 		}
 	};
@@ -181,6 +182,13 @@
 					}
 				} else if (triangularHighlight[val] === true) {
 					const returnedValue = triangleHighlight(word + " " + val);
+					if (returnedValue) {
+						decoded += returnedValue + " ";
+					} else {
+						combinedValue.num -= val;
+					}
+				} else if (customNumberFilter.includes(val)) {
+					const returnedValue = highlight(word + " " + val, "highlight2");
 					if (returnedValue) {
 						decoded += returnedValue + " ";
 					} else {
@@ -349,6 +357,14 @@
 	:global(.highlight, .highlight.a:link, a:visited) {
 		color: yellow;
 		background-color: blue;
+		font-style: italic;
+		font-weight: bold;
+	}
+
+
+	:global(.highlight2, .highlight2.a:link) {
+		color: gold;
+		background-color: orangered;
 		font-style: italic;
 		font-weight: bold;
 	}
