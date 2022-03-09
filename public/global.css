@@ -38,6 +38,8 @@ input, button, select, textarea {
 	box-sizing: border-box;
 	border: 1px solid #ccc;
 	border-radius: 2px;
+	border-radius: 1vh;
+
 }
 
 input:disabled {
@@ -48,6 +50,7 @@ button {
 	color: #333;
 	background-color: #f4f4f4;
 	outline: none;
+	border-radius: 1vh;
 }
 
 button:disabled {

@@ -123,7 +123,7 @@
 		return simplified;
 	};
 
-	$: if( selectedCipher) {
+	$: if( selectedCipher === selectedCipher) {
 		quickDecode = evalWord(quickWord)
 	}
 
@@ -134,7 +134,7 @@
 		if (!params.showValues) text = word;
 		if (
 			params.ignoreTrivial &&
-			(trivialList.includes(simplify(word)) || simplify(word).length < 4)
+			(trivialList.includes(simplify(word)) || simplify(word).length < 3)
 		) {
 			return params.onlyShowHighlighted ? "" : text;
 		} else {
@@ -151,7 +151,7 @@
 		if (!params.showValues) text = word;
 		if (
 			params.ignoreTrivial &&
-			(trivialList.includes(word) || simplify(word).length < 4)
+			(trivialList.includes(word) || simplify(word).length < 3)
 		) {
 			return params.onlyShowHighlighted ? "" : text;
 		} else {
@@ -246,7 +246,7 @@
 					type="text"
 					use:shortcut={{
 						code: "Enter",
-						callback: () => addToHighlights(numberSearch),
+						callback: () => numberSearch && addToHighlights(numberSearch),
 					}}
 					bind:value={numberSearch}
 					placeholder="number search"
@@ -385,7 +385,7 @@
 	.numberbox {
 		width: 3em;
 	}
-
+	
 	input {
 		width: 9em;
 	}
