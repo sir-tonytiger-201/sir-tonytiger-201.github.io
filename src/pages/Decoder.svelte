@@ -32,7 +32,7 @@
 		201: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/201",
 	};
 
-	const trivialList = ["a", "is", "or", "of", "if", "at", "the", "also", "for"];
+	const trivialList = ["a", "is", "or", "of", "if", "at", "the", "also", "for", "said", "then", "his", "has", "and"];
 
 	const addToHighlights = (num) => {
 		if (!customNumberFilter.includes(Number(num))) {
@@ -148,8 +148,9 @@
 	};
 
 	const triangleHighlight = (text) => {
-		const word = text.split(" ")[0];
+		const word = simplify(text.split(" ")[0]);
 		if (!params.showValues) text = word;
+		console.log(text,word)
 		if (
 			params.ignoreTrivial &&
 			(trivialList.includes(word) || simplify(word).length < 3)
