@@ -6,6 +6,7 @@
 	import { scale } from "svelte/transition";
 	import { cubicOut } from "svelte/easing";
 	import { triangularNumbers } from "../js/store";
+	import Clipboard from "../components/Clipboard.svelte";
 
 	let text = "";
 	let selectedCipher = 0;
@@ -129,7 +130,7 @@
 		let simplified = "";
 		//console.log("word = ", word)
 		for (const c of word) {
-			if (currentCipher.vArr[currentCipher.cArr.indexOf(c.charCodeAt(0))]) {
+			if (currentCipher.vArr[currentCipher.cArr.indexOf(c.toLowerCase().charCodeAt(0))]) {
 				simplified += c;
 			}
 		}
@@ -228,7 +229,8 @@
 			if (customNumberFilter.includes(combinedValue.num)) {
 				combinedValue.html = highlight(combinedValue.num, "highlight2");
 			} else if ($triangularNumbers.includes(combinedValue.num)) {
-				combinedValue.html = "<span class='triangle-highlight'>" + combinedValue.num + "</span>"
+				combinedValue.html =
+					"<span class='triangle-highlight'>" + combinedValue.num + "</span>";
 			} else if (specialNumbers.includes(combinedValue.num)) {
 				combinedValue.html = highlight(combinedValue.num);
 			} else {
@@ -246,6 +248,17 @@
 	};
 
 	$: quickDecode = evalWord(quickWord);
+
+	const pasteText = async () => {
+		if (navigator.clipboard) {
+			console.log("found clipboard");
+		} else {
+			console.log("clipsboard not found");
+		}
+		text = await navigator.clipboard.readText();
+
+		console.log(text);
+	};
 </script>
 
 <!-- {"cipherName":"English Ordinal",
@@ -262,6 +275,8 @@
 			<TriangularNumbers bind:triangularHighlight />
 			<nav>
 				<!-- <h1>Decoder</h1> -->
+				<button on:click={pasteText}>Paste text</button>
+				<button on:click={() => (text = "")}>Clear text</button>
 				<input type="text" bind:value={quickWord} placeholder="quick decode" />
 				<input
 					type="text"
@@ -269,7 +284,7 @@
 					class="numberbox"
 					bind:value={quickDecode}
 				/>
-				<button on:click={() => (text = "")}>Clear text</button>
+				
 				<input
 					type="text"
 					use:shortcut={{
@@ -284,11 +299,12 @@
 					show
 					{#if params.onlyShowHighlighted} all {:else} only highlighted {/if}
 				</button>
-				<button on:click={() => toggleAndUpdate("showValues")}>
-					{#if params.showValues} hide {:else} show {/if} values
-				</button>
+
 				<button on:click={() => toggleAndUpdate("ignoreTrivial")}>
 					{#if params.ignoreTrivial} show {:else} hide {/if} trivial
+				</button>
+				<button on:click={() => toggleAndUpdate("showValues")}>
+					{#if params.showValues} hide {:else} show {/if} values
 				</button>
 				<select
 					bind:value={selectedCipher}
