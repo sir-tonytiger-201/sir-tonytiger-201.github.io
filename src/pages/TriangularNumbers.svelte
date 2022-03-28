@@ -1,4 +1,6 @@
 <script>
+  import { triangularNumbers } from "../js/store";
+  export let triangleArray = [];
   const triangular = (number) => {
     const abs = Math.abs(number);
     return (abs / 2) * (abs + 1) * (abs / number) || 0;
@@ -6,17 +8,21 @@
 
   export let triangularHighlight = {}
   const numbers = 50;
-  let numberArray = [];
+  
   for (let index = 1; index < numbers; index++) {
     const triangleNum = triangular(index)
-    numberArray.push(triangleNum);
+    triangleArray.push(triangleNum);
     triangularHighlight[triangleNum] = true;
   }
+
+
   let number='';
 
     const toggleHighlight = num => {
     triangularHighlight[num] = !triangularHighlight[num]
   }
+
+  triangularNumbers.set(triangleArray);
   
 </script>
 
@@ -33,13 +39,13 @@
   <table>
     <thead>
       <tr>
-        {#each numberArray as triangularNumber, i}
+        {#each triangleArray as triangularNumber, i}
           <td>{i+1}</td>
         {/each}
       
 
 </tr>
-  {#each numberArray as triangularNumber, i}
+  {#each triangleArray as triangularNumber, i}
   <td>
     <a href="" bind:innerHTML={triangularNumber} contenteditable 
     class:triangularhighlight={triangularHighlight[triangularNumber]}

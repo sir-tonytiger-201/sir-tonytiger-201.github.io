@@ -5,6 +5,8 @@
 	import TriangularNumbers from "./TriangularNumbers.svelte";
 	import { scale } from "svelte/transition";
 	import { cubicOut } from "svelte/easing";
+	import { triangularNumbers } from "../js/store";
+
 	let text = "";
 	let selectedCipher = 0;
 	let selected = 0;
@@ -186,9 +188,9 @@
 				combinedValue.num += val;
 
 				if (customNumberFilter.includes(val)) {
-					console.log("found", val)
+					console.log("found", val);
 					const returnedValue = highlight(word + " " + val, "highlight2");
-					console.log("returnedValue =",returnedValue)
+					console.log("returnedValue =", returnedValue);
 					if (returnedValue) {
 						decoded += returnedValue + " ";
 						//console.log("decoded =",decoded)
@@ -222,8 +224,12 @@
 					}
 				}
 			}
-			
-		 if (specialNumbers.includes(combinedValue.num)) {
+
+			if (customNumberFilter.includes(combinedValue.num)) {
+				combinedValue.html = highlight(combinedValue.num, "highlight2");
+			} else if ($triangularNumbers.includes(combinedValue.num)) {
+				combinedValue.html = "<span class='triangle-highlight'>" + combinedValue.num + "</span>"
+			} else if (specialNumbers.includes(combinedValue.num)) {
 				combinedValue.html = highlight(combinedValue.num);
 			} else {
 				combinedValue.html = combinedValue.num;
