@@ -146,12 +146,14 @@
 	}
 
 	const highlight = (text, customClass = "highlight") => {
-		const [word, value] =
-			typeof text === "string" ? text.split(" ") : [text, null];
+		let [word, value] =
+			typeof text === "string" ? text.split(" ") : [text, 0];
 		if (!params.showValues) text = word;
+		if (typeof(word) === "number") word = word.toString()
+		console.log('word =', word, 'type = ', typeof(word))
 		if (
 			params.ignoreTrivial &&
-			(trivialList.includes(simplify(word)) || simplify(word).length < 3)
+			(trivialList.includes(simplify(word.toLowerCase())) || simplify(word).length < 3)
 		) {
 			return params.onlyShowHighlighted ? "" : text;
 		} else {
@@ -168,7 +170,7 @@
 		if (!params.showValues) text = word;
 		if (
 			params.ignoreTrivial &&
-			(trivialList.includes(word) || simplify(word).length < 3)
+			(trivialList.includes(word.toLowerCase()) || simplify(word).length < 3)
 		) {
 			return params.onlyShowHighlighted ? "" : text;
 		} else {
