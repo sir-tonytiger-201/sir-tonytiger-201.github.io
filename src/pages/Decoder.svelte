@@ -9,7 +9,7 @@
 	let selectedCipher = 0;
 	let selected = 0;
 	let triangularHighlight = {};
-	let quickWord = '';
+	let quickWord = "";
 	const params = {
 		ignoreTrivial: false,
 		onlyShowHighlighted: false,
@@ -19,7 +19,7 @@
 	let showValues = false;
 	let numberLookup = "";
 	let numberSearch = "";
-	let customNumberFilter = []
+	let customNumberFilter = [];
 	$: specialNumbers = [33, 38, 42, 47, 48, 74, 83, 84, 120, 137, 201];
 	const numberInfo = {
 		33: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/33",
@@ -32,7 +32,22 @@
 		201: "https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/201",
 	};
 
-	const trivialList = ["a", "is", "or", "of", "if", "at", "the", "also", "for", "said", "then", "his", "has", "and"];
+	const trivialList = [
+		"a",
+		"is",
+		"or",
+		"of",
+		"if",
+		"at",
+		"the",
+		"also",
+		"for",
+		"said",
+		"then",
+		"his",
+		"has",
+		"and",
+	];
 
 	const addToHighlights = (num) => {
 		if (!customNumberFilter.includes(Number(num))) {
@@ -42,7 +57,6 @@
 		}
 	};
 
-	
 	$: currentCipher = cipherList[selectedCipher];
 	$: cipherString = () => {
 		if (!currentCipher) return "";
@@ -124,12 +138,11 @@
 		return simplified;
 	};
 
-	$: if( selectedCipher === selectedCipher) {
-		quickDecode = evalWord(quickWord)
+	$: if (selectedCipher === selectedCipher) {
+		quickDecode = evalWord(quickWord);
 	}
 
-
-	const highlight = (text, customClass = 'highlight') => {
+	const highlight = (text, customClass = "highlight") => {
 		const [word, value] =
 			typeof text === "string" ? text.split(" ") : [text, null];
 		if (!params.showValues) text = word;
@@ -150,7 +163,6 @@
 	const triangleHighlight = (text) => {
 		const word = simplify(text.split(" ")[0]);
 		if (!params.showValues) text = word;
-		console.log(text,word)
 		if (
 			params.ignoreTrivial &&
 			(trivialList.includes(word) || simplify(word).length < 3)
@@ -173,7 +185,17 @@
 				val = evalWord(word);
 				combinedValue.num += val;
 
-				if (specialNumbers.includes(val)) {
+				if (customNumberFilter.includes(val)) {
+					console.log("found", val)
+					const returnedValue = highlight(word + " " + val, "highlight2");
+					console.log("returnedValue =",returnedValue)
+					if (returnedValue) {
+						decoded += returnedValue + " ";
+						//console.log("decoded =",decoded)
+					} else {
+						combinedValue.num -= val;
+					}
+				} else if (specialNumbers.includes(val)) {
 					//val = highlight(val);
 					const returnedValue = highlight(word + " " + val);
 					if (returnedValue) {
@@ -183,13 +205,6 @@
 					}
 				} else if (triangularHighlight[val] === true) {
 					const returnedValue = triangleHighlight(word + " " + val);
-					if (returnedValue) {
-						decoded += returnedValue + " ";
-					} else {
-						combinedValue.num -= val;
-					}
-				} else if (customNumberFilter.includes(val)) {
-					const returnedValue = highlight(word + " " + val, "highlight2");
 					if (returnedValue) {
 						decoded += returnedValue + " ";
 					} else {
@@ -207,13 +222,12 @@
 					}
 				}
 			}
-
-			if (specialNumbers.includes(combinedValue.num)) {
+			
+		 if (specialNumbers.includes(combinedValue.num)) {
 				combinedValue.html = highlight(combinedValue.num);
 			} else {
 				combinedValue.html = combinedValue.num;
 			}
-
 			if (decoded.length > 0) {
 				decoded +=
 					combinedValue.num > 0 && params.showValues
@@ -225,8 +239,7 @@
 		return decoded;
 	};
 
-	$: quickDecode = evalWord(quickWord)
-
+	$: quickDecode = evalWord(quickWord);
 </script>
 
 <!-- {"cipherName":"English Ordinal",
@@ -243,13 +256,13 @@
 			<TriangularNumbers bind:triangularHighlight />
 			<nav>
 				<!-- <h1>Decoder</h1> -->
+				<input type="text" bind:value={quickWord} placeholder="quick decode" />
 				<input
 					type="text"
-					bind:value={quickWord}
-					
-					placeholder="quick decode"
+					readonly
+					class="numberbox"
+					bind:value={quickDecode}
 				/>
-				<input type="text" readonly class="numberbox" bind:value={quickDecode} />
 				<button on:click={() => (text = "")}>Clear text</button>
 				<input
 					type="text"
@@ -324,7 +337,7 @@
 	</p> -->
 		{#key selectedCipher}
 			{#key triangularHighlight}
-					{@html decode(text).replace(/<br><br>/g,'<br>')}
+				{@html decode(text).replace(/<br><br>/g, "<br>")}
 			{/key}
 		{/key}
 		<!-- 	{#each cipherList as c}
@@ -338,7 +351,6 @@
 		text-align: center;
 		max-width: 240px;
 		margin: 0px;
-		
 	}
 
 	h1 {
@@ -355,15 +367,14 @@
 		}
 	}
 
-	:global(.highlight, .highlight.a:link, a:visited) {
+	:global(.highlight, a.highlight) {
 		color: yellow;
 		background-color: blue;
 		font-style: italic;
 		font-weight: bold;
 	}
 
-
-	:global(.highlight2, .highlight2.a:link) {
+	:global(.highlight2, a.highlight2) {
 		color: gold;
 		background-color: orangered;
 		font-style: italic;
@@ -388,7 +399,6 @@
 		text-align: center;
 		align-content: center;
 		border-radius: 1em;
-		
 	}
 
 	.decoded {
@@ -402,7 +412,7 @@
 	.numberbox {
 		width: 3em;
 	}
-	
+
 	input {
 		width: 9em;
 	}
