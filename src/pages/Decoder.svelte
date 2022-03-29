@@ -344,7 +344,6 @@
 				>
 				<button>Sorted Results</button>
 			</nav>
-
 			<TextInput
 				{shortcut}
 				label="Text to decode"
@@ -371,6 +370,7 @@
 </main>
 
 <style>
+	
 	main {
 		text-align: center;
 		max-width: 240px;
@@ -415,9 +415,9 @@
 	.fixed {
 		margin-top: 0px;
 		margin-left: auto;
-		margin-right: 1.5em;
+		margin-right: auto;
 		/* 		position: fixed; */
-		background-position-y: center;
+		background-position-y: center;;
 		width: auto;
 		background-color: yellow;
 		text-align: center;
@@ -440,4 +440,5 @@
 	input {
 		width: 9em;
 	}
+	
 </style>

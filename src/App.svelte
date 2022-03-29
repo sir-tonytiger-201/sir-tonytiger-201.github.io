@@ -1,7 +1,5 @@
 <script>
 	import Decoder from "./pages/Decoder.svelte";
-
-	
 </script>
 
 <!-- {"cipherName":"English Ordinal",
@@ -12,15 +10,12 @@
 "diacriticsAsRegular":true,
 "caseSensitive":false,"enabled":true,"cp":[],"cv":[],"sumArr":[]} -->
 <nav>
-	<Decoder></Decoder>	
+	<Decoder />
 </nav>
 
-<main>
+<main />
 
-
-
-	
-</main>
+``
 
 <style>
 	main {
@@ -30,13 +25,7 @@
 		margin: 0;
 	}
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 3em;
-		font-weight: 100;
-		margin: auto;
-	}
+
 
 	@media (min-width: 640px) {
 		main {
@@ -44,7 +33,7 @@
 		}
 	}
 
-		.highlight {
+	.highlight {
 		color: yellow;
 		background-color: red;
 		font-style: oblique;
@@ -54,7 +43,7 @@
 		padding-top: 0px;
 		margin-top: 0px;
 
-		background-color: red;
+		
 	}
+	
 </style>
-

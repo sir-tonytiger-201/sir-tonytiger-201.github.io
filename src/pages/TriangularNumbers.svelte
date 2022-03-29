@@ -27,7 +27,7 @@
 </script>
 
 <div class="numberbar">
-  <div>Triangular Numbers 
+  <div> Triangular Numbers 
     <button on:click={() => {
     for (const val in triangularHighlight) {triangularHighlight[val] = false}
   }}>clear</button>
@@ -58,7 +58,7 @@
 </table>
 </div>
 
-<style>
+<style lang="postcss">
   a {
     cursor: pointer;
   }
@@ -83,5 +83,7 @@
     border-collapse: collapse;
     padding: 0.5vh;
   }
+
+  
 
 </style>
