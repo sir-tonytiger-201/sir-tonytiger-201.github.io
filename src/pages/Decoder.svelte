@@ -50,6 +50,7 @@
 		"his",
 		"has",
 		"and",
+		"was",
 	];
 
 	const addToHighlights = (num) => {
