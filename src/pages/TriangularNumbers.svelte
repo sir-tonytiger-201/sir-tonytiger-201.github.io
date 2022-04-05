@@ -22,7 +22,7 @@
     triangularHighlight[num] = !triangularHighlight[num]
   }
 
-  triangularNumbers.set(triangleArray);
+  triangularNumbers.set(triangleArray)
   
 </script>
 

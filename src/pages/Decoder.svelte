@@ -3,6 +3,7 @@
 	import cipherList from "../calc/ciphers";
 	import { shortcut } from "../js/shortcut";
 	import TriangularNumbers from "./TriangularNumbers.svelte";
+	import FibonacciNumbers from "./FibonacciNumbers.svelte";
 	import { scale } from "svelte/transition";
 	import { cubicOut } from "svelte/easing";
 	import { triangularNumbers } from "../js/store";
@@ -49,6 +50,7 @@
 		"then",
 		"his",
 		"has",
+		"was",
 		"and",
 		"was",
 	];
@@ -129,7 +131,6 @@
 	const simplify = (word) => {
 		if (typeof word !== "string") return word;
 		let simplified = "";
-		//console.log("word = ", word)
 		for (const c of word) {
 			if (currentCipher.vArr[currentCipher.cArr.indexOf(c.toLowerCase().charCodeAt(0))]) {
 				simplified += c;
@@ -151,7 +152,6 @@
 			typeof text === "string" ? text.split(" ") : [text, 0];
 		if (!params.showValues) text = word;
 		if (typeof(word) === "number") word = word.toString()
-		console.log('word =', word, 'type = ', typeof(word))
 		if (
 			params.ignoreTrivial &&
 			(trivialList.includes(simplify(word.toLowerCase())) || simplify(word).length < 3)
@@ -254,13 +254,10 @@
 
 	const pasteText = async () => {
 		if (navigator.clipboard) {
-			console.log("found clipboard");
 		} else {
 			console.log("clipsboard not found");
 		}
 		text = await navigator.clipboard.readText();
-
-		console.log(text);
 	};
 </script>
 
@@ -276,6 +273,7 @@
 	<div class="fixed">
 		<center>
 			<TriangularNumbers bind:triangularHighlight />
+			<FibonacciNumbers  />
 			<nav>
 				<!-- <h1>Decoder</h1> -->
 				<button on:click={pasteText}>Paste text</button>
