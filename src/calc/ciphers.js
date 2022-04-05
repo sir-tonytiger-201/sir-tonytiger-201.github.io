@@ -26,7 +26,7 @@ const cipherList = [
 		false
 	),
 	new cipher(
-		"English Reduction",
+		"Pythagorean Reduction",
 		"English",
 		216, 95, 73,
 		[97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122],
@@ -46,7 +46,7 @@ const cipherList = [
 		false
 	),
 	new cipher(
-		"Reverse Reduction",
+		"Reverse Pythagorean",
 		"English",
 		180, 60, 69,
 		[97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122],
@@ -627,4 +627,7 @@ const cipherList = [
 	)
 ]
 
-export default cipherList;
+const reducedCipherList = cipherList.filter((m, i) => i < 4 );
+
+//export default cipherList;
+export default reducedCipherList;
