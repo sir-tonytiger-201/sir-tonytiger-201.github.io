@@ -13,6 +13,7 @@
 <label for="">
   <span>{label}</span>
   {#if multiline}
+  
     <textarea
       autofocus
       bind:value
@@ -20,9 +21,10 @@
       on:click={() => (focused = !focused)}
       spellcheck={false}
       on:mouseleave={() => (focused = false)}
-      class:focused
-
+      class:focused 
+      style="padding: 1em;"
     />
+
   {:else}
     <input type="text" bind:value />
   {/if}
@@ -36,19 +38,18 @@
   span {
     padding: 0 0 var(--spacingSmall) var(--spacingLarge);
   }
-  input,
   textarea {
     display: block;
     background: #f8ecde;
     border-radius: 25px;
     border: 2px solid var(--colorFg);
-    padding: 1rem;
+    padding: 10em;
     width: 100%;
     margin: 0px;
     box-shadow: 10px 10px 20px rgb(224, 93, 174);
-  }
-  textarea {
+    padding: 10em;
     height: 8rem;
+
   }
 
   .focused {

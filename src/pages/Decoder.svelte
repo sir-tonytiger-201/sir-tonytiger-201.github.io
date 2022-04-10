@@ -343,12 +343,14 @@
 				>
 				<button>Sorted Results</button>
 			</nav>
+			
 			<TextInput
 				{shortcut}
 				label="Text to decode"
 				bind:value={text}
 				multiline={true}
 			/>
+		
 			{cipherString()}
 		</center>
 	</div>
@@ -423,7 +425,6 @@
 		align-content: center;
 		border-radius: 1em;
 	}
-
 	.decoded {
 		/* 	margin-top: 18em; */
 		margin-top: 1em;
@@ -432,6 +433,7 @@
 		border-radius: 1em;
 	}
 
+	
 	.numberbox {
 		width: 3em;
 	}
