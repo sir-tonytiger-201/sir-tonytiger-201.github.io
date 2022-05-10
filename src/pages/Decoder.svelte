@@ -60,6 +60,7 @@
 			customNumberFilter = [...customNumberFilter, Number(num)];
 			triangularHighlight = triangularHighlight;
 			console.log(customNumberFilter);
+			numberSearch = '';
 		}
 	};
 
@@ -132,7 +133,11 @@
 		if (typeof word !== "string") return word;
 		let simplified = "";
 		for (const c of word) {
-			if (currentCipher.vArr[currentCipher.cArr.indexOf(c.toLowerCase().charCodeAt(0))]) {
+			if (
+				currentCipher.vArr[
+					currentCipher.cArr.indexOf(c.toLowerCase().charCodeAt(0))
+				]
+			) {
 				simplified += c;
 			}
 		}
@@ -148,13 +153,13 @@
 	}
 
 	const highlight = (text, customClass = "highlight") => {
-		let [word, value] =
-			typeof text === "string" ? text.split(" ") : [text, 0];
+		let [word, value] = typeof text === "string" ? text.split(" ") : [text, 0];
 		if (!params.showValues) text = word;
-		if (typeof(word) === "number") word = word.toString()
+		if (typeof word === "number") word = word.toString();
 		if (
 			params.ignoreTrivial &&
-			(trivialList.includes(simplify(word.toLowerCase())) || simplify(word).length < 3)
+			(trivialList.includes(simplify(word.toLowerCase())) ||
+				simplify(word).length < 3)
 		) {
 			return params.onlyShowHighlighted ? "" : text;
 		} else {
@@ -273,7 +278,7 @@
 	<div class="fixed">
 		<center>
 			<TriangularNumbers bind:triangularHighlight />
-			<FibonacciNumbers  />
+			<FibonacciNumbers />
 			<nav>
 				<!-- <h1>Decoder</h1> -->
 				<button on:click={pasteText}>Paste text</button>
@@ -285,16 +290,18 @@
 					class="numberbox"
 					bind:value={quickDecode}
 				/>
-				
+
+				<!-- 
+						use:shortcut={{
+							code: "Enter",
+							callback: () => numberSearch && addToHighlights(numberSearch),
+						}}
+ -->	
 				<input
 					type="text"
-					use:shortcut={{
-						code: "Enter",
-						callback: () => numberSearch && addToHighlights(numberSearch),
-					}}
-					bind:value={numberSearch}
-					placeholder="number search"
-				/>
+				
+				bind:value={numberSearch}
+				placeholder="number search" />
 				<button on:click={() => addToHighlights(numberSearch)}>go</button>
 				<button on:click={() => toggleAndUpdate("onlyShowHighlighted")}>
 					show
@@ -307,6 +314,7 @@
 				<button on:click={() => toggleAndUpdate("showValues")}>
 					{#if params.showValues} hide {:else} show {/if} values
 				</button>
+				<button on:click={displayCipher}>cipher info</button>
 				<select
 					bind:value={selectedCipher}
 					use:shortcut={{ code: "Home", callback: () => (selectedCipher = 0) }}
@@ -318,17 +326,44 @@
 					{/each}
 				</select>
 				<!-- Current Cipher: {currentCipher.cipherName} -->
-				<button on:click={displayCipher}>View Cipher</button>
+
 				<button
 					on:click={cycleBackward}
 					use:shortcut={{ shift: true, code: "Tab", callback: cycleBackward }}
-					>Previous Cipher</button
 				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+						fill="currentColor"
+						class="bi bi-arrow-left-square"
+						viewBox="0 0 16 16"
+					>
+						<path
+							fill-rule="evenodd"
+							d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
+						/>
+					</svg>
+				</button>
 				<button
 					on:click={cycleForward}
 					use:shortcut={{ code: "Tab", callback: cycleForward }}
-					>Next Cipher</button
 				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="16"
+						height="16"
+						fill="currentColor"
+						class="bi bi-arrow-right-square"
+						viewBox="0 0 16 16"
+					>
+						<path
+							fill-rule="evenodd"
+							d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm4.5 5.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
+						/>
+					</svg>
+				</button>
+
 				<input
 					type="text"
 					bind:value={numberLookup}
@@ -341,16 +376,16 @@
 							`https://www.reddit.com/r/GeometersOfHistory/wiki/spellcomponents/${numberLookup}`
 						)}>go</button
 				>
-				<button>Sorted Results</button>
+				<button disabled={true}>Sorted Results</button>
 			</nav>
-			
+
 			<TextInput
 				{shortcut}
 				label="Text to decode"
 				bind:value={text}
 				multiline={true}
 			/>
-		
+
 			{cipherString()}
 		</center>
 	</div>
@@ -371,7 +406,6 @@
 </main>
 
 <style>
-	
 	main {
 		text-align: center;
 		max-width: 240px;
@@ -418,7 +452,7 @@
 		margin-left: auto;
 		margin-right: auto;
 		/* 		position: fixed; */
-		background-position-y: center;;
+		background-position-y: center;
 		width: auto;
 		background-color: yellow;
 		text-align: center;
@@ -433,7 +467,6 @@
 		border-radius: 1em;
 	}
 
-	
 	.numberbox {
 		width: 3em;
 	}
@@ -441,5 +474,4 @@
 	input {
 		width: 9em;
 	}
-	
 </style>

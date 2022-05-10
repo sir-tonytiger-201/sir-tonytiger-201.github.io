@@ -17,6 +17,11 @@
     <textarea
       autofocus
       bind:value
+      placeholder="Type or paste text here
+
+Left-click to expand/unexpand. 
+
+Tab will cycle through ciphers."
       transition:scale={{ duration: 1000, easing: cubicOut }}
       on:click={() => (focused = !focused)}
       spellcheck={false}
