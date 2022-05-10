@@ -8,7 +8,7 @@ I made this program to make it easier to do detect Gematria and numeric connecti
 
 ## Get started
 
-To quickly load an article, copy it, and then press the "paste text" button.
+To analyze an article, copy it into memory, and then press the "paste text" button.
 
 The easiest way to cycle through the ciphers is with the Tab key, but you can also use the menu buttons. Shift + Tab will cycle backwards.
 
