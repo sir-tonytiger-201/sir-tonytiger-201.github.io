@@ -50,8 +50,8 @@
     margin: 0px;
     width: 100%;
     background-color: lightblue;
-    border-top-left-radius: 1em;
-    border-top-right-radius: 1em;
+/*     border-top-left-radius: 1em;
+    border-top-right-radius: 1em; */
     }
 
     .fibonacciHighlight {
