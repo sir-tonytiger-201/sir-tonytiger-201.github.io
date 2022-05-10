@@ -1,4 +1,4 @@
-*Inspirted by [Gematrinator](https://www.gematrinator.com/calculator)
+*Inspired by the [Gematrinator](https://www.gematrinator.com/calculator)
 
 ---
 
