@@ -14,6 +14,8 @@ new cipher(
 )
 */
 
+const maxCiphers = 9;
+
 const cipherList = [
 	new cipher(
 		"English Ordinal",
@@ -627,7 +629,7 @@ const cipherList = [
 	)
 ]
 
-const reducedCipherList = cipherList.filter((m, i) => i < 4 );
+const reducedCipherList = cipherList.filter((m, i) => i < maxCiphers );
 
 //export default cipherList;
 export default reducedCipherList;

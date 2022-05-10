@@ -9,18 +9,39 @@
 "vArr":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26],
 "diacriticsAsRegular":true,
 "caseSensitive":false,"enabled":true,"cp":[],"cv":[],"sumArr":[]} -->
-<nav>
+	
+
+		<nav>
+		<h5>
+			Gematria Decoder by Tony
+		</h5>
 	<Decoder />
+	
 </nav>
 
-<main />
+<main>
+
+</main>
 
 <style>
+
+	h5 {
+		color: blue;
+		text-shadow: 4px 4px 2px rgb(212, 27, 172);
+		position: absolute;
+		margin-left: 2em;
+		vertical-align: top;
+		
+	}
 	main {
 		text-align: center;
 		padding: 0;
 		max-width: 240px;
 		margin: 0;
+	}
+
+	nav {
+		clear: left;
 	}
 
 

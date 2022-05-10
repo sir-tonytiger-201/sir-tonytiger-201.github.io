@@ -17,11 +17,11 @@
     <textarea
       autofocus
       bind:value
-      placeholder="Type or paste text here
+      placeholder="Type or paste text here.
 
-Left-click to expand/unexpand. 
+Left-click to expand/contract. Window will automatically contract when mouse moves outside.
 
-Tab will cycle through ciphers."
+The Tab key will cycle through ciphers, or use arrow buttons."
       transition:scale={{ duration: 1000, easing: cubicOut }}
       on:click={() => (focused = !focused)}
       spellcheck={false}
@@ -53,7 +53,7 @@ Tab will cycle through ciphers."
     margin: 0px;
     box-shadow: 10px 10px 20px rgb(224, 93, 174);
     padding: 10em;
-    height: 8rem;
+    height: 9rem;
 
   }
 

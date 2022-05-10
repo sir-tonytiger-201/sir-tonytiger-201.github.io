@@ -277,6 +277,7 @@
 <main>
 	<div class="fixed">
 		<center>
+			
 			<TriangularNumbers bind:triangularHighlight />
 			<FibonacciNumbers />
 			<nav>
@@ -410,6 +411,12 @@
 		text-align: center;
 		max-width: 240px;
 		margin: 0px;
+	}
+
+	select {
+		color: yellow;
+		background-color:blue;
+		box-shadow: 9px 7px 8px rgba(200, 14, 224, 0.863)
 	}
 
 	h1 {
