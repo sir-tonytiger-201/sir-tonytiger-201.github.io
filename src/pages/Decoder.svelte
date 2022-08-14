@@ -13,7 +13,9 @@
 	let selectedCipher = 0;
 	let selected = 0;
 	let triangularHighlight = {};
+	let fibonacciHighlight = {};
 	let quickWord = "";
+	export let focussed = true;
 	const params = {
 		ignoreTrivial: false,
 		onlyShowHighlighted: false,
@@ -60,7 +62,7 @@
 			customNumberFilter = [...customNumberFilter, Number(num)];
 			triangularHighlight = triangularHighlight;
 			console.log(customNumberFilter);
-			numberSearch = '';
+			numberSearch = "";
 		}
 	};
 
@@ -79,6 +81,7 @@
 	const toggleAndUpdate = (key) => {
 		params[key] = !params[key];
 		triangularHighlight = triangularHighlight;
+		fibonacciHighlight = fibonacciHighlight;
 	};
 
 	const displayCipher = () => {
@@ -93,7 +96,8 @@
 		console.log(letterValues);
 		//console.log(JSON.stringify(letterValues, (key,value) => key + ": " + value , ''));
 		alert(
-			JSON.stringify(letterValues, null, "") + JSON.stringify(currentCipher)
+			JSON.stringify(letterValues, null, "") +
+				JSON.stringify(currentCipher)
 		);
 	};
 
@@ -103,6 +107,7 @@
 		} else {
 			selectedCipher = cipherList.length - 1;
 		}
+		focussed = false;
 	};
 	const cycleForward = () => {
 		if (selectedCipher < cipherList.length - 1) {
@@ -110,13 +115,15 @@
 		} else {
 			selectedCipher = 0;
 		}
+		focussed = false;
 	};
 
 	const valueOf = (c) => {
 		//console.log("character is ", c, c.charCodeAt(0));
 		//console.log(currentCipher.vArr);
 		const val =
-			currentCipher.vArr[currentCipher.cArr.indexOf(c.charCodeAt(0))] || 0;
+			currentCipher.vArr[currentCipher.cArr.indexOf(c.charCodeAt(0))] ||
+			0;
 		//console.log("value of ", c, " is ", val);
 		return val;
 	};
@@ -153,7 +160,8 @@
 	}
 
 	const highlight = (text, customClass = "highlight") => {
-		let [word, value] = typeof text === "string" ? text.split(" ") : [text, 0];
+		let [word, value] =
+			typeof text === "string" ? text.split(" ") : [text, 0];
 		if (!params.showValues) text = word;
 		if (typeof word === "number") word = word.toString();
 		if (
@@ -176,7 +184,8 @@
 		if (!params.showValues) text = word;
 		if (
 			params.ignoreTrivial &&
-			(trivialList.includes(word.toLowerCase()) || simplify(word).length < 3)
+			(trivialList.includes(word.toLowerCase()) ||
+				simplify(word).length < 3)
 		) {
 			return params.onlyShowHighlighted ? "" : text;
 		} else {
@@ -184,10 +193,21 @@
 		}
 	};
 
+	const simpleNumericReduction = (value) => {
+		let val = 0;
+		for (const c of value.toString()) {
+			val += Number(c);
+		}
+
+		if (val.toString().length > 1) val = simpleNumericReduction(val);
+		return val;
+	};
+
 	const decode = (t) => {
 		let decoded = "";
 		let combinedValue = { num: 0, html: "" };
 		let val = 0;
+		let reducedNumerical = "";
 
 		for (const line of t.split("\n")) {
 			combinedValue.num = 0;
@@ -198,7 +218,10 @@
 
 				if (customNumberFilter.includes(val)) {
 					console.log("found", val);
-					const returnedValue = highlight(word + " " + val, "highlight2");
+					const returnedValue = highlight(
+						word + " " + val,
+						"highlight2"
+					);
 					console.log("returnedValue =", returnedValue);
 					if (returnedValue) {
 						decoded += returnedValue + " ";
@@ -215,6 +238,13 @@
 						combinedValue.num -= val;
 					}
 				} else if (triangularHighlight[val] === true) {
+					const returnedValue = triangleHighlight(word + " " + val);
+					if (returnedValue) {
+						decoded += returnedValue + " ";
+					} else {
+						combinedValue.num -= val;
+					}
+				} else if (fibonacciHighlight[val] === true) {
 					const returnedValue = triangleHighlight(word + " " + val);
 					if (returnedValue) {
 						decoded += returnedValue + " ";
@@ -238,16 +268,24 @@
 				combinedValue.html = highlight(combinedValue.num, "highlight2");
 			} else if ($triangularNumbers.includes(combinedValue.num)) {
 				combinedValue.html =
-					"<span class='triangle-highlight'>" + combinedValue.num + "</span>";
+					"<span class='triangle-highlight'>" +
+					combinedValue.num +
+					"</span>";
 			} else if (specialNumbers.includes(combinedValue.num)) {
 				combinedValue.html = highlight(combinedValue.num);
 			} else {
 				combinedValue.html = combinedValue.num;
 			}
+
 			if (decoded.length > 0) {
+				reducedNumerical = simpleNumericReduction(combinedValue.num);
 				decoded +=
 					combinedValue.num > 0 && params.showValues
-						? "(" + combinedValue.html + ")<br><br>"
+						? "(" + combinedValue.html + ") "
+						: "<br>";
+				decoded +=
+					reducedNumerical > 0 && params.showValues
+						? "[" + reducedNumerical + "]<br><br>"
 						: "<br>";
 			}
 		}
@@ -277,14 +315,17 @@
 <main>
 	<div class="fixed">
 		<center>
-			
 			<TriangularNumbers bind:triangularHighlight />
-			<FibonacciNumbers />
+			<FibonacciNumbers bind:fibonacciHighlight />
 			<nav>
 				<!-- <h1>Decoder</h1> -->
 				<button on:click={pasteText}>Paste text</button>
 				<button on:click={() => (text = "")}>Clear text</button>
-				<input type="text" bind:value={quickWord} placeholder="quick decode" />
+				<input
+					type="text"
+					bind:value={quickWord}
+					placeholder="quick decode"
+				/>
 				<input
 					type="text"
 					readonly
@@ -297,16 +338,22 @@
 							code: "Enter",
 							callback: () => numberSearch && addToHighlights(numberSearch),
 						}}
- -->	
+ -->
 				<input
 					type="text"
-				
-				bind:value={numberSearch}
-				placeholder="number search" />
-				<button on:click={() => addToHighlights(numberSearch)}>go</button>
+					bind:value={numberSearch}
+					placeholder="number search"
+				/>
+				<button on:click={() => addToHighlights(numberSearch)}
+					>go</button
+				>
 				<button on:click={() => toggleAndUpdate("onlyShowHighlighted")}>
 					show
-					{#if params.onlyShowHighlighted} all {:else} only highlighted {/if}
+					{#if params.onlyShowHighlighted}
+						all
+					{:else}
+						only highlighted
+					{/if}
 				</button>
 
 				<button on:click={() => toggleAndUpdate("ignoreTrivial")}>
@@ -318,7 +365,10 @@
 				<button on:click={displayCipher}>cipher info</button>
 				<select
 					bind:value={selectedCipher}
-					use:shortcut={{ code: "Home", callback: () => (selectedCipher = 0) }}
+					use:shortcut={{
+						code: "Home",
+						callback: () => (selectedCipher = 0),
+					}}
 				>
 					{#each cipherList as cipher, i}
 						<option value={i}>
@@ -330,7 +380,11 @@
 
 				<button
 					on:click={cycleBackward}
-					use:shortcut={{ shift: true, code: "Tab", callback: cycleBackward }}
+					use:shortcut={{
+						shift: true,
+						code: "Tab",
+						callback: cycleBackward,
+					}}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -384,19 +438,23 @@
 				{shortcut}
 				label="Text to decode"
 				bind:value={text}
+				bind:focussed
 				multiline={true}
 			/>
 
 			{cipherString()}
 		</center>
 	</div>
-	<div class="decoded" transition:scale={{ duration: 1000, easing: cubicOut }}>
+	<div
+		class="decoded"
+		transition:scale={{ duration: 1000, easing: cubicOut }}
+	>
 		<!-- 	<p>{text}</p>
 	<p>
 		{JSON.stringify(currentCipher)}
 	</p> -->
 		{#key selectedCipher}
-			{#key triangularHighlight}
+			{#key (triangularHighlight, fibonacciHighlight)}
 				{@html decode(text).replace(/<br><br>/g, "<br>")}
 			{/key}
 		{/key}
@@ -409,14 +467,14 @@
 <style>
 	main {
 		text-align: center;
-		max-width: 240px;
+		/* max-width: 640px; */
 		margin: 0px;
 	}
 
 	select {
 		color: yellow;
-		background-color:blue;
-		box-shadow: 9px 7px 8px rgba(200, 14, 224, 0.863)
+		background-color: blue;
+		box-shadow: 9px 7px 8px rgba(200, 14, 224, 0.863);
 	}
 
 	h1 {

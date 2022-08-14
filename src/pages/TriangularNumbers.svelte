@@ -1,6 +1,6 @@
 <script>
   import { triangularNumbers } from "../js/store";
-  export let triangleArray = [];
+  let triangleArray = [];
   const triangular = (number) => {
     const abs = Math.abs(number);
     return (abs / 2) * (abs + 1) * (abs / number) || 0;

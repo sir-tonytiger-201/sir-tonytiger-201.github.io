@@ -7,7 +7,7 @@
   export let value;
   export let multiline = false;
   export let shortcut;
-  let focused = false;
+  export let focussed = false;
 </script>
 
 <label for="">
@@ -23,10 +23,10 @@ Left-click to expand/contract. Window will automatically contract when mouse mov
 
 The Tab key will cycle through ciphers, or use arrow buttons."
       transition:scale={{ duration: 1000, easing: cubicOut }}
-      on:click={() => (focused = !focused)}
+      on:click={() => (focussed = !focussed)}
       spellcheck={false}
-      on:mouseleave={() => (focused = false)}
-      class:focused 
+      on:mouseleave={() => (focussed = false)}
+      class:focussed 
       style="padding: 1em;"
     />
 
@@ -54,10 +54,9 @@ The Tab key will cycle through ciphers, or use arrow buttons."
     box-shadow: 10px 10px 20px rgb(224, 93, 174);
     padding: 10em;
     height: 9rem;
-
   }
 
-  .focused {
+  .focussed {
     height: 30em;
   }
   @tailwind base;
